@@ -333,9 +333,10 @@ int main() {
             double x_add_on = 0;
 
             // Fill up the rest of our path planner after filling it with previous points,
+            // 2.24 is for conversion from MPH to MPS
+            double N = (target_dist/(.02*ref_vel/2.24));
             // here we will always output 50 points
             for (int i = 1; i <= 50 - previous_path_x.size(); ++i) {
-              double N = (target_dist/(.02*ref_vel/2.24));
               double x_point = x_add_on + (target_x)/N;
               double y_point = s(x_point);
 
