@@ -9,6 +9,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "spline.h"
+#include "behavior_planner.h"
 
 using namespace std;
 
@@ -284,6 +285,12 @@ int main() {
 
             if (too_close)
             {
+              string next_state = get_next_state(lane);
+              if (next_state == "LCL") {
+                lane = lane - 1;
+              } else if (next_state == "LCR") {
+                lane = lane + 1;
+              }
               ref_vel -= .224;
             }
             else if (ref_vel < 49.5)
