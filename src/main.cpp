@@ -266,10 +266,10 @@ int main() {
             // Find ref_v to use
             if (too_close)
             {
-              string next_state = get_next_state(lane);
-              if (next_state == "LCL") {
+              string next_state = get_next_state(car_s, car_d, car_speed, lane, prev_size, neighbor_vehicles);
+              if (next_state.compare("LCL") == 0) {
                 lane = lane - 1;
-              } else if (next_state == "LCR") {
+              } else if (next_state.compare("LCR") == 0) {
                 lane = lane + 1;
               }
               ref_vel -= .224;
