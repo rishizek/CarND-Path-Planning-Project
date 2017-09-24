@@ -10,6 +10,7 @@
 #include "json.hpp"
 #include "spline.h"
 #include "behavior_planner.h"
+#include "vehicle.h"
 
 using namespace std;
 
@@ -246,7 +247,11 @@ int main() {
             //  car's y velocity in m/s,                 // 4
             //  car's s position in frenet coordinates,  // 5
             //  car's d position in frenet coordinates]  // 6
-            auto sensor_fusion = j[1]["sensor_fusion"];
+            vector<vector<double>> sensor_fusion = j[1]["sensor_fusion"];
+            vector<Vehicle> vehicles;
+            for (int i = 0; i < sensor_fusion.size(); ++i) {
+              vehicles.push_back(Vehicle(sensor_fusion[i]));
+            }
 
             int prev_size = previous_path_x.size();
 
@@ -258,16 +263,17 @@ int main() {
             bool too_close = false;
 
             // Find ref_v to use
-            for (int i = 0; i < sensor_fusion.size(); ++i)
+            for (int i = 0; i < vehicles.size(); ++i)
             {
+              Vehicle vehicle = vehicles[i];
               // Car is in my lane
-              double d = sensor_fusion[i][6];
+              double d = vehicle.d;
               if (d < (2+4*lane+2) && d > (2+4*lane-2))
               {
-                double vx = sensor_fusion[i][3];
-                double vy = sensor_fusion[i][4];
-                double check_speed = sqrt(vx*vx+vy*vy);
-                double check_car_s = sensor_fusion[i][5];
+                double vx = vehicle.vx;
+                double vy = vehicle.vy;
+                double check_speed = vehicle.v;
+                double check_car_s = vehicle.s;
 
                 // If using previous points can project s value outward in time
                 // .02 is because the car moves every points every 20ms.
