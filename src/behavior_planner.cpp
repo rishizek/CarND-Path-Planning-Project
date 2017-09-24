@@ -9,10 +9,10 @@ string get_next_state(int lane) {
   else return "LCL";
 }
 
-bool is_front_vehicle_too_close(double car_s, int lane, int prev_size, vector<Vehicle> vehicles) {
+bool is_front_vehicle_too_close(double car_s, int lane, int prev_size, vector<Vehicle> neighbor_vehicles) {
   bool too_close = false;
-  for (int i = 0; i < vehicles.size(); ++i) {
-    Vehicle vehicle = vehicles[i];
+  for (int i = 0; i < neighbor_vehicles.size(); ++i) {
+    Vehicle vehicle = neighbor_vehicles[i];
     // Car is in my lane
     if (lane == vehicle.lane) {
       double vx = vehicle.vx;

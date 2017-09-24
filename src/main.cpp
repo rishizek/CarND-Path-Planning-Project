@@ -248,9 +248,9 @@ int main() {
             //  car's s position in frenet coordinates,  // 5
             //  car's d position in frenet coordinates]  // 6
             vector<vector<double>> sensor_fusion = j[1]["sensor_fusion"];
-            vector<Vehicle> vehicles;
+            vector<Vehicle> neighbor_vehicles;
             for (int i = 0; i < sensor_fusion.size(); ++i) {
-              vehicles.push_back(Vehicle(sensor_fusion[i]));
+              neighbor_vehicles.push_back(Vehicle(sensor_fusion[i]));
             }
 
             int prev_size = previous_path_x.size();
@@ -261,7 +261,7 @@ int main() {
             }
 
             bool too_close;
-            too_close = is_front_vehicle_too_close(car_s, lane, prev_size, vehicles);
+            too_close = is_front_vehicle_too_close(car_s, lane, prev_size, neighbor_vehicles);
 
             // Find ref_v to use
             if (too_close)
