@@ -28,6 +28,15 @@ public:
     s  = sensor_fusion_i[5];
     d  = sensor_fusion_i[6];
     v  = sqrt(vx*vx+vy*vy);
+    if (d >= 0 && d < 4) {
+      lane = 0;
+    } else if (d >= 4 && d < 8) {
+      lane = 1;
+    } else if (d >= 8 && d < 12) {
+      lane = 2;
+    } else {
+      lane = -1;
+    }
   };
 
 };

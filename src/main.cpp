@@ -267,8 +267,7 @@ int main() {
             {
               Vehicle vehicle = vehicles[i];
               // Car is in my lane
-              double d = vehicle.d;
-              if (d < (2+4*lane+2) && d > (2+4*lane-2))
+              if (lane == vehicle.lane)
               {
                 double vx = vehicle.vx;
                 double vy = vehicle.vy;
