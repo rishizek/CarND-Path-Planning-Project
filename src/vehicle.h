@@ -1,6 +1,8 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
+#include <vector>
+#include <math.h>
 using namespace std;
 
 class Vehicle {

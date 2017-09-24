@@ -9,8 +9,8 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "spline.h"
-#include "behavior_planner.h"
 #include "vehicle.h"
+#include "behavior_planner.h"
 
 using namespace std;
 
@@ -260,34 +260,10 @@ int main() {
               car_s = end_path_s;
             }
 
-            bool too_close = false;
+            bool too_close;
+            too_close = is_front_vehicle_too_close(car_s, lane, prev_size, vehicles);
 
             // Find ref_v to use
-            for (int i = 0; i < vehicles.size(); ++i)
-            {
-              Vehicle vehicle = vehicles[i];
-              // Car is in my lane
-              if (lane == vehicle.lane)
-              {
-                double vx = vehicle.vx;
-                double vy = vehicle.vy;
-                double check_speed = vehicle.v;
-                double check_car_s = vehicle.s;
-
-                // If using previous points can project s value outward in time
-                // .02 is because the car moves every points every 20ms.
-                check_car_s += ((double)prev_size*.02*check_speed);
-                // Check s values greater than mine and s gap
-                if ((check_car_s > car_s) && ((check_car_s-car_s) < 30))
-                {
-                  // Do some logic here, lower reference velocity so we don't 
-                  // crash into the car in front of us, could 
-                  // also flag to try to change lanes.
-                  too_close = true;
-                }
-              }
-            }
-
             if (too_close)
             {
               string next_state = get_next_state(lane);
