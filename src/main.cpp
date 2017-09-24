@@ -269,6 +269,7 @@ int main() {
                 double check_car_s = sensor_fusion[i][5];
 
                 // If using previous points can project s value outward in time
+                // .02 is because the car moves every points every 20ms.
                 check_car_s += ((double)prev_size*.02*check_speed);
                 // Check s values greater than mine and s gap
                 if ((check_car_s > car_s) && ((check_car_s-car_s) < 30))
@@ -381,6 +382,7 @@ int main() {
 
             // Fill up the rest of our path planner after filling it with previous points,
             // 2.24 is for conversion from MPH to MPS
+            // .02 is because the car moves every points every 20ms.
             double N = (target_dist/(.02*ref_vel/2.24));
             // here we will always output 50 points
             for (int i = 1; i <= 50 - previous_path_x.size(); ++i) {
