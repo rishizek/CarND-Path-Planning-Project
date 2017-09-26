@@ -43,11 +43,11 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
     // calculate the "cost" associated with that trajectory.
     double cost_for_state = 0;
     /* TODO
-    cost_for_state += weights[0] * collision_with_front_vehicle_cost(future_car_sd_for_stete, neighbor_vehicles);
-    cost_for_state += weights[1] * collision_with_behind_vehicle_cost(future_car_sd_for_stete, neighbor_vehicles);
-    cost_for_state += weights[2] * collision_with_left_vehicle_cost(future_car_sd_for_stete, neighbor_vehicles);
-    cost_for_state += weights[3] * collision_with_right_vehicle_cost(future_car_sd_for_stete, neighbor_vehicles);
-    cost_for_state += weights[4] * change_lane_cost(future_car_sd_for_stete, neighbor_vehicles);
+    cost_for_state += weights[0] * collision_with_front_vehicle_cost(future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[1] * collision_with_behind_vehicle_cost(future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[2] * collision_with_left_vehicle_cost(future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[3] * collision_with_right_vehicle_cost(future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[4] * change_lane_cost(future_car_sd_for_state, neighbor_vehicles);
     */
   }
   //cout << endl;
