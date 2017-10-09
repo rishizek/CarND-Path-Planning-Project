@@ -17,26 +17,19 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
   // keep track of the total cost of each state.
   vector<double> costs;
   vector<double> weights = {10, 9, 1, 1, 5};
-  int new_lane;
-
+  
   for (string state : possible_successor_states) {
     //cout << state << endl;
     // calculate the "cost" associated with that trajectory.
     double cost_for_state = 0;
-    if (state.compare("LCL") == 0) {
-      new_lane = lane - 1;
-    } else if (state.compare("LCR") == 0) {
-      new_lane = lane + 1;
-    } else {
-      new_lane = lane;
-    }
-    cost_for_state += weights[0] * collision_with_front_vehicle_cost(car_s, new_lane, prev_size,
+
+    cost_for_state += weights[0] * collision_with_front_vehicle_cost(car_s, lane, state, prev_size,
                                                                      neighbor_vehicles);
     /* TODO
-    cost_for_state += weights[1] * collision_with_behind_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[2] * collision_with_left_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[3] * collision_with_right_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[4] * change_lane_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[1] * collision_with_left_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[2] * collision_with_right_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[3] * change_lane_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
+    cost_for_state += weights[4] * collision_with_behind_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
     */
     costs.push_back(cost_for_state);
   }
@@ -55,8 +48,14 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
   return best_next_state;
 }
 
-double collision_with_front_vehicle_cost(double car_s, int lane, int prev_size,
+double collision_with_front_vehicle_cost(double car_s, int lane, string state, int prev_size,
                                          vector<Vehicle> neighbor_vehicles) {
+  if (state.compare("LCL") == 0) {
+    lane = lane - 1;
+  } else if (state.compare("LCR") == 0) {
+    lane = lane + 1;
+  } 
+
   for (Vehicle vehicle : neighbor_vehicles) {
     if (lane == vehicle.lane) {
       double check_speed = vehicle.v;
@@ -73,7 +72,7 @@ double collision_with_front_vehicle_cost(double car_s, int lane, int prev_size,
       }
     }
   }
-  return 0;
+  return 0.0;
 }
 
 bool is_front_vehicle_too_close(double car_s, int lane, int prev_size, vector<Vehicle> neighbor_vehicles) {
