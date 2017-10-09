@@ -1,7 +1,35 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
-   
-### Simulator.
+
+### Reflection
+The model is mainly composed by two parts:
+1. Behavior Panning by Finite State Machine and Cost function
+2. Trajectory Generation by Spline Path Planner (from Tutorial)
+
+First, the behavior planner only selects best future state based on the cost associated with each state. Then, the speed and trajectory of the car are computed by the trajectory generator. 
+
+#### 1. Behavior Panning by Finite State Machine and Cost function
+There are 3 finite states for the model:
+1. KL: Keep Lane
+2. LCL: Lane Change Left
+3. LCR: Lane Change Right
+
+The costs for new state are computed with the 4 cost functions explained below and the state with minimum cost are selected as the new state. 
+
+Here the cost functions used for the model are:
+1. collision_with_front_vehicle_cost() function
+This function computes the collision with front vehicle at future lane. For instance, if the new state is LCL, the cost is computed assuming the self-driving car is located in the left lane.
+2. collision_with_left_vehicle_cost() function
+This function computes the collision cost with the vehicles at left lane relative to present lane (not new lane) when assuming making lane change left. For instance, if the is a neighbor car left hand of the self-driving vehicle, the cost is 1 if new state is LCL but 0 if new states are KL or LCR. 
+3. collision_with_right_vehicle_cost() function
+Similar to collision_with_left_vehicle_cost() function, compute the collision cost with the vehicles at right lane with LCR.
+4. change_lane_cost() function
+This function compute the cost for changing lane.
+
+#### 2. Trajectory Generation by Spline Path Planner (from Tutorial)
+Trajectory Generator used for the model is based on the one given in the tutorial. Basically 2 points are selected either from the current location of the car or the last 2 previous path points in the simulator. Additionally, the 3 more points, which are 30m, 60m, 90m away in s position in frenet coordinates with new lane position (d position in frenet coordinates) from the behavior planner are computed with appropriate speed. Then, by fitting the 5 points with the spline, smooth trajectory is generated. 
+
+### Simulator
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
 
 ### Goals
