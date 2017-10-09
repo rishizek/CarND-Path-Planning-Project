@@ -16,7 +16,7 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
 
   // keep track of the total cost of each state.
   vector<double> costs;
-  vector<double> weights = {10, 9, 1, 1, 5};
+  vector<double> weights = {10, 10, 10, 1};
   
   for (string state : possible_successor_states) {
     //cout << state << endl;
@@ -25,15 +25,14 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
 
     cost_for_state += weights[0] * collision_with_front_vehicle_cost(car_s, lane, state, prev_size,
                                                                      neighbor_vehicles);
-    /* TODO
-    cost_for_state += weights[1] * collision_with_left_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[2] * collision_with_right_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[3] * change_lane_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    cost_for_state += weights[4] * collision_with_behind_vehicle_cost(prev_size, future_car_sd_for_state, neighbor_vehicles);
-    */
+    cost_for_state += weights[1] * collision_with_left_vehicle_cost(car_s, lane, state, prev_size,
+                                                                     neighbor_vehicles);
+    cost_for_state += weights[2] * collision_with_right_vehicle_cost(car_s, lane, state, prev_size,
+                                                                     neighbor_vehicles);
+    cost_for_state += weights[3] * change_lane_cost(state);
     costs.push_back(cost_for_state);
   }
-  //cout << endl;
+
   // Find the mininum cost state
   string best_next_state;
   double min_cost = 9999999;
@@ -47,6 +46,56 @@ string get_next_state(double car_s, double car_d, double car_speed, int lane, in
   }
   return best_next_state;
 }
+
+double change_lane_cost(string state) {
+  if (state.compare("KL") == 0) {
+    return 0.0;
+  } else {
+    return 1.0;
+  } 
+}
+
+double collision_with_left_vehicle_cost(double car_s, int lane, string state, int prev_size,
+                                         vector<Vehicle> neighbor_vehicles) {
+  if (state.compare("LCL") == 0) {
+    lane = lane - 1;
+    return collision_with_side_vehicle_cost(car_s, lane, prev_size, neighbor_vehicles);
+  } else if (state.compare("LCR") == 0) {
+    return 0.0;
+  } 
+}
+
+double collision_with_right_vehicle_cost(double car_s, int lane, string state, int prev_size,
+                                         vector<Vehicle> neighbor_vehicles) {
+  if (state.compare("LCL") == 0) {
+    return 0.0;
+  } else if (state.compare("LCR") == 0) {
+    lane = lane + 1;
+    return collision_with_side_vehicle_cost(car_s, lane, prev_size, neighbor_vehicles);
+  } 
+}
+
+double collision_with_side_vehicle_cost(double car_s, int lane, int prev_size,
+                                         vector<Vehicle> neighbor_vehicles) {
+  for (Vehicle vehicle : neighbor_vehicles) {
+    if (lane == vehicle.lane) {
+      double check_speed = vehicle.v;
+      double check_car_s = vehicle.s;
+      // If using previous points can project s value outward in time.
+      // .02 is because the car moves every points every 20ms.
+      check_car_s += ((double)prev_size*.02*check_speed);
+      // Check s values greater than mine and s gap
+      if (fabs(check_car_s-car_s) < 50) {
+        // Do some logic here, lower reference velocity so we don't
+        // crash into the car in front of us, could
+        // also flag to try to change lanes.
+        return 1.0;
+      }
+    }
+  }
+  return 0.0;
+}
+
 
 double collision_with_front_vehicle_cost(double car_s, int lane, string state, int prev_size,
                                          vector<Vehicle> neighbor_vehicles) {
